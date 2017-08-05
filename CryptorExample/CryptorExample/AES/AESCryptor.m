@@ -11,7 +11,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 const static NSErrorDomain kCryptErrorDomain = @"kCryptorErrorDomain";
-const static NSUInteger kAESLoopBlockSize = 256;
+const static NSUInteger kAESLoopBlockSize = 256 * 16;
 
 @implementation AESCryptor
 
@@ -50,7 +50,7 @@ const static NSUInteger kAESLoopBlockSize = 256;
     
     //Create Streams
     NSInputStream *inputS = [[NSInputStream alloc] initWithURL:sourceFileURL];
-    NSOutputStream *outputS = [[NSOutputStream alloc] initWithURL:sourceFileURL append:YES];
+    NSOutputStream *outputS = [[NSOutputStream alloc] initWithURL:tempURLAfterAES append:YES];
     [inputS open];
     [outputS open];
     
@@ -70,7 +70,8 @@ const static NSUInteger kAESLoopBlockSize = 256;
                                           iv:iv
                                          key:key
                               sourceFileSize:fileSize
-                                   isEncrypt:isEncrypt];
+                                   isEncrypt:isEncrypt
+                                       error:error];
             break;
         }
     }
@@ -92,21 +93,30 @@ const static NSUInteger kAESLoopBlockSize = 256;
                                 iv: (NSData * _Nonnull)iv
                                key: (NSString * _Nonnull)key
                     sourceFileSize: (NSUInteger)sourceFileSize
-                         isEncrypt: (BOOL)isEncrypt {
+                         isEncrypt: (BOOL)isEncrypt error: (NSError * _Nullable __autoreleasing *_Nullable)error  {
+    
+    if (key.length != 16 && key.length != 32) {
+        if (error) {
+            *error = [NSError errorWithDomain:kCryptErrorDomain
+                                         code:3
+                                     userInfo:@{NSLocalizedDescriptionKey: @"Key length invalid"}];
+        }
+        return;
+    }
     
     unsigned char * ivOutBuffer = (unsigned char *)malloc(AES_BLOCK_SIZE);
     
-    NSUInteger bytesRead = 0;
+    NSUInteger bytesReadTotal = 0;
+    uint8_t readBuffer[kAESLoopBlockSize] = {0};
     while ([inputStream hasBytesAvailable]) {
         
-        uint8_t readBuffer[kAESLoopBlockSize * 8] = {0};
-        NSUInteger lenRead = [inputStream read:readBuffer maxLength:kAESLoopBlockSize * 8];
-        
+        NSUInteger lenRead = [inputStream read:readBuffer maxLength:kAESLoopBlockSize];
+
         if (lenRead == 0) {
             break;
         }
         
-        bytesRead += lenRead;
+        bytesReadTotal += lenRead;
         
         size_t dataOutLen;
         unsigned char * dataOut = NULL;
@@ -120,9 +130,9 @@ const static NSUInteger kAESLoopBlockSize = 256;
                                 key:(unsigned char *)key.UTF8String
                              keyLen:(int)key.length
                           isEncrypt:isEncrypt
-                      needUnpadding:(bytesRead == sourceFileSize) && !isEncrypt];
+                      needUnpadding:(bytesReadTotal == sourceFileSize) && !isEncrypt];
         
-        [outputStream write:readBuffer maxLength:lenRead];
+        [outputStream write:dataOut maxLength:dataOutLen];
         
     }
     
@@ -269,7 +279,7 @@ const static NSUInteger kAESLoopBlockSize = 256;
                                                            kCCOptionPKCS7Padding,
                                                            iv.bytes,
                                                            key.UTF8String,
-                                                           key.length * 8,
+                                                           key.length,
                                                            NULL,
                                                            0,
                                                            0,

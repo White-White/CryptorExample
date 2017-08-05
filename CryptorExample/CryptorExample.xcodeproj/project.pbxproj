@@ -15,6 +15,7 @@
 		1F2A08611F346CBD00294EF2 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2A085F1F346CBD00294EF2 /* libcrypto.a */; };
 		1F2A08621F346CBD00294EF2 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2A08601F346CBD00294EF2 /* libssl.a */; };
 		1F2A08661F346D6400294EF2 /* AESCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2A08651F346D6400294EF2 /* AESCryptor.m */; };
+		1FE353EA1F35C1130002EB9F /* FileReader_RandomLength.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FE353E91F35C1130002EB9F /* FileReader_RandomLength.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		1F2A08601F346CBD00294EF2 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = ../../openssl_arm/lib/libssl.a; sourceTree = "<group>"; };
 		1F2A08641F346D6400294EF2 /* AESCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESCryptor.h; sourceTree = "<group>"; };
 		1F2A08651F346D6400294EF2 /* AESCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESCryptor.m; sourceTree = "<group>"; };
+		1FE353E91F35C1130002EB9F /* FileReader_RandomLength.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileReader_RandomLength.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				1F21473C1F346B0A003F1570 /* Assets.xcassets */,
 				1F21473E1F346B0A003F1570 /* LaunchScreen.storyboard */,
 				1F2147411F346B0A003F1570 /* Info.plist */,
+				1FE353E81F35C0FA0002EB9F /* Test */,
 				1F2A08631F346D6400294EF2 /* AES */,
 				1F2147471F346B3F003F1570 /* CryptorExample-Bridging-Header.h */,
 			);
@@ -93,6 +96,14 @@
 				1F2A08651F346D6400294EF2 /* AESCryptor.m */,
 			);
 			path = AES;
+			sourceTree = "<group>";
+		};
+		1FE353E81F35C0FA0002EB9F /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				1FE353E91F35C1130002EB9F /* FileReader_RandomLength.swift */,
+			);
+			path = Test;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -169,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F2147381F346B0A003F1570 /* ViewController.swift in Sources */,
+				1FE353EA1F35C1130002EB9F /* FileReader_RandomLength.swift in Sources */,
 				1F2147361F346B0A003F1570 /* AppDelegate.swift in Sources */,
 				1F2A08661F346D6400294EF2 /* AESCryptor.m in Sources */,
 			);
