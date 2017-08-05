@@ -23,6 +23,7 @@ class ViewController: UIViewController {
     //Fake data
 //    let sourceFileURL = URL(fileURLWithPath: "/foo/foo/Japanese_Love_Action_Movie.avi")
     let sourceFileURL = URL(fileURLWithPath: "/Users/white/Desktop/test.pdf")
+
     let iv = Data.init(bytes: [11, 11, 11, 75, 11, 11, 11, 11, 49, 11, 11, 11, 74, 53, 11, 11])
     let key = "xxxxxxxxxxxxxxxx"
     
@@ -41,7 +42,8 @@ class ViewController: UIViewController {
                                                   iv: iv,
                                                   key: key,
                                                   isEncrypt: true,
-                                                  userService: .apple)
+                                                  usingService: .apple)
+            
             let destURLTmp = URL(fileURLWithPath: NSTemporaryDirectory() + UUID.init().uuidString)
             try FileManager.default.moveItem(at: destURL, to: destURLTmp)
             
@@ -56,6 +58,9 @@ class ViewController: UIViewController {
         }
     }
 
+    /// Pretend to receive data from server.
+    ///
+    /// - Parameter data: data received
     func didReceiveDataFromServer(_ data: Data) {
         print("Did receive: \(data.count)")
         //
@@ -65,7 +70,6 @@ class ViewController: UIViewController {
         
         guard self.bufferData.count >= blockSizeToEncrypt else {
             //Decrypt only if bufferData exceeds 1MB
-            print("buffer: \(self.bufferData.count)")
             return
         }
         
@@ -97,13 +101,10 @@ class ViewController: UIViewController {
         self.size_HadDecrypted += dataToDecrypt.count
         self.bufferData = dataToDecryptNextTime
         
-        guard self.fileSize_EncryptFile - self.size_HadDecrypted >= 0 else {
-            fatalError()
-        }
-        
-        print("Total size: \(self.fileSize_EncryptFile). Bytes left to decrypt: \(self.fileSize_EncryptFile - self.size_HadDecrypted). BufferLen: \(self.bufferData.count)")
+        print("Had decrypted data: \(self.size_HadDecrypted), progress: \(CGFloat(self.size_HadDecrypted)/CGFloat(self.fileSize_EncryptFile))%")
     }
     
+    //Had received all data.
     func didReceiveAllDataFromServer() {
         
         guard self.bufferData.count != 0 else {
@@ -124,13 +125,12 @@ class ViewController: UIViewController {
             self.outputStream.write($0, maxLength: dataDecrypted.count)
         }
         
-        print("解之前 \(self.bufferData.count) 解之后 \(dataDecrypted.count)")
         
         self.size_HadDecrypted += self.bufferData.count
         self.bufferData = Data()
         self.outputStream.close()
         
-        print("Did download file to \(self.urlForDownloadedFile.path). The file had already beedn decrypted. ^_^")
+        print("Did download file to \(self.urlForDownloadedFile.path). \n The file had already been decrypted. ^_^")
     }
 }
 

@@ -19,7 +19,7 @@ const static NSUInteger kAESLoopBlockSize = 256 * 16;
                                             iv: (NSData * _Nonnull)iv
                                            key: (NSString * _Nonnull)key
                                      isEncrypt: (BOOL)isEncrypt
-                                   userService: (AESCryptorCodeProvider)service
+                                  usingService: (AESCryptorCodeProvider)service
                                          error: (NSError * _Nullable __autoreleasing *_Nullable)error {
     BOOL isSourceFileDir = YES;
     if (![NSFileManager.defaultManager fileExistsAtPath:sourceFileURL.path isDirectory:&isSourceFileDir]) {

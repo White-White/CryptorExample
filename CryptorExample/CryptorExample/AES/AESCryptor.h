@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, AESCryptorCodeProvider) {
                                             iv: (NSData * _Nonnull)iv
                                            key: (NSString * _Nonnull)key
                                      isEncrypt: (BOOL)isEncrypt
-                                   userService: (AESCryptorCodeProvider)service
+                                  usingService: (AESCryptorCodeProvider)service
                                          error: (NSError * _Nullable __autoreleasing *_Nullable)error;
 
 + (NSData * _Nonnull)AES_CBC_OpenSSLWith: (NSData * _Nonnull)data
